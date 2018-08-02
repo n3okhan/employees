@@ -1,5 +1,31 @@
 $(document ).ready(function() {
     //get all the data on app startup
+    loadData();
+
+    function loadData(){
+        employeesRef.get().then(function(querySnapshot){
+            LoadTableData(querySnapshot)
+        });
+    }
+
+    function LoadTableData (querySnapshot){
+        var tableRow = '';
+        querySnapshot.forEach(doc => {
+            var document = doc.data();
+            tableRow += '<tr>';
+            tableRow += '<td class="fname">' + document.fName + '</td>';
+            tableRow += '<td class="lname">' + document.lName + '</td>';
+            tableRow += '<td class="email">' + document.email + '</td>';
+            tableRow += '<td class="age">' + document.age + '</td>';
+            tableRow += '<td class="gender">' + document.gender + '</td>';
+            tableRow += '<td class="yearsofexperience">' + document.yearsOfExpereince + '</td>';
+            tableRow += '<td class="isfulltime">' + document.isFullTime + '</td>';
+            tableRow += '<td class="editEmployee"><i class="fa fa-pencil" aria-hidden="true" style="color:green"></i></td>';
+            tableRow += '<td class="deleteEmployee"><i class="fa fa-trash" aria-hidden="true" style="color:red"></i></td>';
+            tableRow += '</tr>';
+        });
+        $('tbody.tbodyData').html(tableRow);
+    }
     $('#createEmployee').click(function(){
         $('.employeeForm').css("display", "block");
         $('#dynamicBtn').text('Save Changes')
