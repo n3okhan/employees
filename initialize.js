@@ -1,14 +1,15 @@
 // Initialize Cloud Firestore through Firebase
-
 var db = firebase.firestore();
-var employeesRef = db.collection("employees")
+const settings = {/* your settings... */ timestampsInSnapshots: true};
+db.settings(settings);
+var employeesRef = db.collection("employees");
 
 //Reading data from CFS
 employeesRef.get().then((querySnapShot)=>{
     querySnapShot.forEach((doc) => {
         console.log(`${doc.id}`);
-    })
-})
+    });
+});
 
 
 // adding data to CFS

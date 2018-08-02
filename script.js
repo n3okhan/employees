@@ -4,7 +4,7 @@ $(document ).ready(function() {
 
     function loadData(){
         employeesRef.get().then(function(querySnapshot){
-            LoadTableData(querySnapshot)
+            LoadTableData(querySnapshot);
         });
     }
 
@@ -28,7 +28,7 @@ $(document ).ready(function() {
     }
     $('#createEmployee').click(function(){
         $('.employeeForm').css("display", "block");
-        $('#dynamicBtn').text('Save Changes')
+        $('#dynamicBtn').text('Save Changes');
     });
 
     $('#dynamicBtn').click(function(){
@@ -39,12 +39,48 @@ $(document ).ready(function() {
         var age = $("#age").val();
         var gender = $("#gender").val();
         var yearsOfExperience = $("#yearsOfExperience").val();
-        var isfulltime = $('#isFullTime').is(":checked")
+        var isfulltime = $('#isFullTime').is(":checked");
 
         //check if you need to create or update an employee
         if($(this).text() == "Save Changes"){
+            var docuName = fname.charAt(0) + '.' + lname;
+            employeesRef.doc(docuName).set({
+                fName: fname,
+                lName: lname,
+                email: email,
+                age: age,
+                gender: gender,
+                yearsOfExpereince: yearsOfExperience,
+                isFullTime: isfulltime, 
+            }).then(docRef=>{
+                $('#operationStatus').html('<div class="alert alert-success"><strong>Success!</strong> Employee was created!</div>').delay(2500).fadeOut('slow');
+                $('.employeeForm').css('display', 'none');
+                loadData();
+            }).catch(error=>{
+                $('#operationStatus').html('<div class="alert alert-danger"><strongError!</strong> Employee was not created!</div>').delay(2500).fadeOut('slow');
+            });
         }
         else{
+            var docuName = fname.charAt(0) + '.' + lname;
+            employeesRef.doc(docuName).set({
+                fName: fname,
+                lName: lname,
+                email: email,
+                age: age,
+                gender: gender,
+                yearsOfExpereince: yearsOfExperience,
+                isFullTime: isfulltime, 
+            },
+            {
+                merge: true
+
+            }).then( () => {
+                $('#operationStatus').html('<div class="alert alert-success"><strong>Success!</strong> Employee was updated!</div>').delay(2500).fadeOut('slow');
+                $('.employeeForm').css('display', 'none');
+                loadData();
+            }).catch( error => {
+                $('#operationStatus').html('<div class="alert alert-danger"><strongError!</strong> Employee was not updated!</div>').delay(2500).fadeOut('slow');
+            });
         }
     });
 
@@ -72,6 +108,15 @@ $(document ).ready(function() {
         //Get the Employee Data
         var fName = $(this).closest('tr').find('.fname').text(); //First Name
         var lName = $(this).closest('tr').find('.lname').text(); //Last Name
+
+        var docuName = fName.charAt(0) + '.' + lName;
+        employeesRef.doc(docuName).delete().then( () => {
+            $('#operationStatus').html('<div class="alert alert-success"><strong>Success!</strong> Employee was deleted!</div>').delay(2500).fadeOut('slow');
+            $('.employeeForm').css('display', 'none');
+            loadData();
+        }).catch( error => {
+            $('#operationStatus').html('<div class="alert alert-danger"><strongError!</strong> Employee was not deleted!</div>').delay(2500).fadeOut('slow');
+        });
     });
 
     $("#searchEmployee" ).change(function() {
