@@ -33,8 +33,7 @@ $(document).ready(function () {
 
     $('#yearsOfExperienceFilter').click(function () {
         // console.log('yearsOfExperienceFilter Filter executed');
-        employeesRef.where("gender", "==", "Female")
-        employeesRef.where("yearsOfExperience", ">=", 5).where("yearsOfExperience", "<=", 10)
+        employeesRef.where("gender", "==", "Female").where("yearsOfExperience", ">=", 5).where("yearsOfExperience", "<=", 10)
             .onSnapshot(function (querySnapshot) {
                 LoadTableData(querySnapshot);
             });
